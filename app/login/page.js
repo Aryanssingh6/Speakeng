@@ -7,23 +7,33 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
   const router = useRouter()
 
   const handleLogin = async (e) => {
     e.preventDefault()
     setLoading(true)
+    setError('')
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
 
-    if (error) {
-      setMessage('Email ya password galat hai!')
-    } else {
-      router.push('/dashboard')
+      console.log('Login data:', data)
+      console.log('Login error:', error)
+
+      if (error) {
+        setError('Email ya password galat hai! ' + error.message)
+      } else if (data?.user) {
+        window.location.href = '/dashboard'
+      }
+    } catch (err) {
+      console.log('Catch error:', err)
+      setError('Kuch gadbad hui: ' + err.message)
     }
+
     setLoading(false)
   }
 
@@ -32,32 +42,45 @@ export default function Login() {
       <div className="bg-blue-800/40 border border-blue-700 rounded-2xl p-8 w-full max-w-md">
 
         <h1 className="text-3xl font-bold text-center mb-2">SpeakEng</h1>
-        <p className="text-blue-300 text-center mb-8">Wapas aao! Login karo</p>
+        <p className="text-blue-300 text-center mb-8">Wapas swagat hai! 🙏</p>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
 
           <div>
             <label className="text-sm text-blue-300 mb-1 block">Email</label>
-            <input type="email" placeholder="tumhari@email.com"
-              value={email} onChange={(e) => setEmail(e.target.value)} required
-              className="w-full bg-blue-900/50 border border-blue-600 rounded-xl px-4 py-3 text-white placeholder-blue-400 focus:outline-none focus:border-blue-400"/>
+            <input
+              type="email"
+              placeholder="tumhari@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full bg-blue-900/50 border border-blue-600 rounded-xl px-4 py-3 text-white placeholder-blue-400 focus:outline-none focus:border-blue-400"
+            />
           </div>
 
           <div>
             <label className="text-sm text-blue-300 mb-1 block">Password</label>
-            <input type="password" placeholder="Apna password daalo"
-              value={password} onChange={(e) => setPassword(e.target.value)} required
-              className="w-full bg-blue-900/50 border border-blue-600 rounded-xl px-4 py-3 text-white placeholder-blue-400 focus:outline-none focus:border-blue-400"/>
+            <input
+              type="password"
+              placeholder="Apna password daalo"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full bg-blue-900/50 border border-blue-600 rounded-xl px-4 py-3 text-white placeholder-blue-400 focus:outline-none focus:border-blue-400"
+            />
           </div>
 
-          {message && (
+          {error && (
             <p className="text-center text-sm text-red-300 bg-red-900/30 rounded-xl px-4 py-3">
-              {message}
+              {error}
             </p>
           )}
 
-          <button type="submit" disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-400 disabled:bg-blue-700 rounded-xl py-3 font-semibold transition mt-2">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-500 hover:bg-blue-400 disabled:bg-blue-700 rounded-xl py-3 font-semibold transition mt-2"
+          >
             {loading ? 'Login ho raha hai...' : 'Login Karo'}
           </button>
 

@@ -4,8 +4,18 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 
+const levelColors = {
+  A1: 'text-red-400 bg-red-900/40 border-red-700',
+  A2: 'text-orange-400 bg-orange-900/40 border-orange-700',
+  B1: 'text-yellow-400 bg-yellow-900/40 border-yellow-700',
+  B2: 'text-green-400 bg-green-900/40 border-green-700',
+  C1: 'text-blue-400 bg-blue-900/40 border-blue-700',
+  C2: 'text-purple-400 bg-purple-900/40 border-purple-700',
+}
+
 export default function Dashboard() {
   const [user, setUser] = useState(null)
+  const [userLevel, setUserLevel] = useState(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -16,6 +26,8 @@ export default function Dashboard() {
           router.push('/login')
         } else {
           setUser(user)
+          const { data } = await supabase.from('profiles').select('level').eq('id', user.id).single()
+          setUserLevel(data?.level || null)
         }
       } catch (err) {
         console.log(err)
@@ -31,6 +43,9 @@ export default function Dashboard() {
       </main>
     )
   }
+
+  const hasLevel = !!userLevel
+  const levelStyle = userLevel ? levelColors[userLevel] : 'text-blue-400 bg-blue-800/40 border-blue-700'
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-950 to-blue-900 text-white px-6 py-8">
@@ -57,43 +72,86 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+          {/* Level Test */}
           <div className="bg-blue-800/40 border border-blue-700 rounded-2xl p-5">
             <div className="text-3xl mb-3">📊</div>
             <h3 className="font-semibold mb-1">Level Test</h3>
-            <p className="text-blue-300 text-sm mb-4">Apna English level pata karo</p>
+            <p className="text-blue-300 text-sm mb-4">
+              {hasLevel ? `Current level: ${userLevel}` : 'Apna English level pata karo'}
+            </p>
             <a href="/test"
               className="block text-center bg-blue-500 hover:bg-blue-400 rounded-xl py-2 text-sm font-semibold transition">
-              Test Shuru Karo
+              {hasLevel ? 'Retest Karo' : 'Test Shuru Karo'}
             </a>
           </div>
 
+          {/* Lessons */}
           <div className="bg-blue-800/40 border border-blue-700 rounded-2xl p-5">
             <div className="text-3xl mb-3">📚</div>
             <h3 className="font-semibold mb-1">Lessons</h3>
-            <p className="text-blue-300 text-sm mb-4">Tumhare level ke lessons</p>
-            <button className="w-full bg-blue-800 rounded-xl py-2 text-sm text-blue-400 cursor-not-allowed">
-              Pehle Test Do
-            </button>
+            <p className="text-blue-300 text-sm mb-4">
+              {hasLevel ? `${userLevel} level ke lessons` : 'Tumhare level ke lessons'}
+            </p>
+            {hasLevel ? (
+              <a href="/lessons"
+                className="block text-center bg-blue-500 hover:bg-blue-400 rounded-xl py-2 text-sm font-semibold transition">
+                Lessons Dekho →
+              </a>
+            ) : (
+              <button className="w-full bg-blue-800 rounded-xl py-2 text-sm text-blue-400 cursor-not-allowed">
+                Pehle Test Do
+              </button>
+            )}
           </div>
 
+          {/* Mock Interview */}
           <div className="bg-blue-800/40 border border-blue-700 rounded-2xl p-5">
             <div className="text-3xl mb-3">🎤</div>
             <h3 className="font-semibold mb-1">Mock Interview</h3>
             <p className="text-blue-300 text-sm mb-4">AI se practice karo</p>
-            <button className="w-full bg-blue-800 rounded-xl py-2 text-sm text-blue-400 cursor-not-allowed">
-              Pehle Test Do
-            </button>
+            {hasLevel ? (
+              <a href="/interview"
+                className="block text-center bg-blue-500 hover:bg-blue-400 rounded-xl py-2 text-sm font-semibold transition">
+                Interview Shuru Karo →
+              </a>
+            ) : (
+              <button className="w-full bg-blue-800 rounded-xl py-2 text-sm text-blue-400 cursor-not-allowed">
+                Pehle Test Do
+              </button>
+            )}
+          </div>
+
+        </div>
+
+        {/* Writing Practice */}
+        <div className="bg-blue-800/40 border border-blue-700 rounded-2xl p-5 mb-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">✍️</span>
+              <div>
+                <h3 className="font-semibold">Writing Practice</h3>
+                <p className="text-blue-300 text-sm">AI feedback ke saath likho</p>
+              </div>
+            </div>
+            <a href="/writing"
+              className="bg-blue-500 hover:bg-blue-400 rounded-xl px-4 py-2 text-sm font-semibold transition">
+              Start →
+            </a>
           </div>
         </div>
 
-        <div className="bg-blue-800/40 border border-blue-700 rounded-2xl p-5">
+        {/* Level Badge */}
+        <div className={`border rounded-2xl p-5 ${levelStyle}`}>
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="font-semibold">Tumhara Level</h3>
-              <p className="text-blue-300 text-sm">Abhi tak test nahi diya</p>
+              <h3 className="font-semibold text-white">Tumhara Level</h3>
+              <p className="text-blue-300 text-sm">
+                {hasLevel ? 'Test result se set hua hai' : 'Abhi tak test nahi diya'}
+              </p>
             </div>
-            <span className="bg-blue-700 text-blue-200 px-4 py-2 rounded-full text-sm font-semibold">
-              Not Tested
+            <span className={`px-4 py-2 rounded-full text-sm font-bold border ${levelStyle}`}>
+              {userLevel || 'Not Tested'}
             </span>
           </div>
         </div>
