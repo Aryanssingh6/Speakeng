@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { useRouter } from 'next/navigation'
 
 const questions = [
   { id: 1, question: "Choose the correct sentence:", options: ["She don't like coffee.", "She doesn't likes coffee.", "She doesn't like coffee.", "She not like coffee."], answer: 2 },
@@ -22,12 +21,12 @@ const questions = [
 ]
 
 function getLevel(score) {
-  if (score <= 4) return { level: 'A1', label: 'Beginner', color: 'from-red-500 to-rose-400', glow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', desc: 'English basics abhi seekhni hain' }
-  if (score <= 7) return { level: 'A2', label: 'Elementary', color: 'from-orange-500 to-amber-400', glow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', desc: 'Basic English aati hai, aur practice chahiye' }
-  if (score <= 9) return { level: 'B1', label: 'Intermediate', color: 'from-yellow-400 to-amber-300', glow: 'shadow-[0_0_20px_rgba(250,204,21,0.3)]', desc: 'Theek hai, aur improve kar sakte ho' }
-  if (score <= 11) return { level: 'B2', label: 'Upper Intermediate', color: 'from-green-500 to-emerald-400', glow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', desc: 'Achhi English hai, polish karo' }
-  if (score <= 13) return { level: 'C1', label: 'Advanced', color: 'from-blue-500 to-cyan-400', glow: 'shadow-[0_0_20px_rgba(56,189,248,0.3)]', desc: 'Bahut achhi English hai!' }
-  return { level: 'C2', label: 'Mastery', color: 'from-purple-500 to-fuchsia-400', glow: 'shadow-[0_0_20px_rgba(217,70,239,0.3)]', desc: 'Excellent! Native level English!' }
+  if (score <= 4) return { level: 'A1', label: 'Beginner', color: 'from-amber-600/80 to-amber-700/80', glow: 'shadow-[0_0_20px_rgba(245,158,11,0.2)]', desc: 'English basics abhi seekhni hain' }
+  if (score <= 7) return { level: 'A2', label: 'Elementary', color: 'from-amber-500/80 to-amber-600/80', glow: 'shadow-[0_0_20px_rgba(245,158,11,0.2)]', desc: 'Basic English aati hai, aur practice chahiye' }
+  if (score <= 9) return { level: 'B1', label: 'Intermediate', color: 'from-emerald-600/80 to-emerald-700/80', glow: 'shadow-[0_0_20px_rgba(16,185,129,0.2)]', desc: 'Theek hai, aur improve kar sakte ho' }
+  if (score <= 11) return { level: 'B2', label: 'Upper Intermediate', color: 'from-emerald-500/90 to-emerald-600/90', glow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', desc: 'Achhi English hai, polish karo' }
+  if (score <= 13) return { level: 'C1', label: 'Advanced', color: 'from-amber-400 to-amber-600', glow: 'shadow-[0_0_20px_rgba(245,158,11,0.4)]', desc: 'Bahut achhi English hai!' }
+  return { level: 'C2', label: 'Mastery', color: 'from-emerald-400 to-emerald-500', glow: 'shadow-[0_0_20px_rgba(16,185,129,0.5)]', desc: 'Excellent! Native level English!' }
 }
 
 export default function Test() {
@@ -37,7 +36,6 @@ export default function Test() {
   const [finished, setFinished] = useState(false)
   const [score, setScore] = useState(0)
   const [saving, setSaving] = useState(false)
-  const router = useRouter()
 
   const handleAnswer = (index) => {
     setSelected(index)
@@ -79,16 +77,16 @@ export default function Test() {
     const levelData = getLevel(score)
     return (
       <main className="min-h-screen flex items-center justify-center px-4 relative z-10 transition-colors">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] -mr-20 -mt-20"></div>
-        <div className="glass-card rounded-[2.5rem] p-10 w-full max-w-xl text-center relative z-10">
-          <div className="w-24 h-24 mx-auto rounded-3xl bg-slate-800/80 border border-slate-600/50 flex items-center justify-center text-5xl mb-6 shadow-lg">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] -mr-20 -mt-20"></div>
+        <div className="glass-card rounded-[2.5rem] p-10 w-full max-w-xl text-center relative z-10 border border-white/10">
+          <div className="w-24 h-24 mx-auto rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-5xl mb-6 shadow-lg">
             🎉
           </div>
-          <h2 className="text-3xl font-bold text-white mb-2">Assessment Complete</h2>
+          <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">Assessment Complete</h2>
           <p className="text-slate-400 mb-8 font-medium">We've calculated your proficiency score.</p>
 
-          <div className={`rounded-3xl p-8 mb-8 bg-gradient-to-br ${levelData.color} ${levelData.glow} relative overflow-hidden`}>
-            <div className="absolute inset-0 bg-black/20 mix-blend-overlay"></div>
+          <div className={`rounded-3xl p-8 mb-8 bg-gradient-to-br ${levelData.color} ${levelData.glow} relative overflow-hidden border border-white/5`}>
+            <div className="absolute inset-0 bg-[#050505]/20 mix-blend-overlay"></div>
             <p className="text-6xl font-black text-white drop-shadow-lg mb-2 relative z-10">{score}<span className="text-3xl opacity-80">/{questions.length}</span></p>
             <p className="text-4xl font-black text-white drop-shadow-md mb-2 relative z-10 tracking-widest">{levelData.level}</p>
             <p className="text-xl text-white/90 font-bold mb-2 relative z-10 tracking-wider uppercase">{levelData.label}</p>
@@ -109,11 +107,10 @@ export default function Test() {
             )}
           </div>
 
-          <button
-            onClick={() => window.location.href = '/dashboard'}
-            className="w-full premium-btn rounded-xl py-4 font-bold tracking-wide shadow-lg shadow-blue-500/20 text-[15px]">
+          <a href="/dashboard"
+            className="block text-center w-full premium-btn-gold rounded-xl py-4 font-bold tracking-wide shadow-lg shadow-amber-500/20 text-[15px]">
             Return to Dashboard →
-          </button>
+          </a>
         </div>
       </main>
     )
@@ -128,27 +125,27 @@ export default function Test() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30">
+             <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center shadow-lg border border-amber-500/30">
                 <span className="text-lg">📈</span>
              </div>
              <h1 className="text-xl font-bold text-white tracking-tight">Proficiency Test</h1>
           </div>
-          <span className="bg-slate-800 border border-slate-700 px-4 py-1.5 rounded-full text-xs font-bold text-blue-400 tracking-wider">Q {current + 1} OF {questions.length}</span>
+          <span className="bg-[#050505] border border-white/10 px-4 py-1.5 rounded-full text-xs font-bold text-amber-500 tracking-wider">Q {current + 1} OF {questions.length}</span>
         </div>
 
         {/* Progress bar */}
-        <div className="w-full h-1 bg-slate-800/80 rounded-full mb-10 overflow-hidden">
+        <div className="w-full h-1 bg-white/5 rounded-full mb-10 overflow-hidden">
           <div
-            className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(56,189,248,0.5)]"
+            className="bg-amber-500 h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(245,158,11,0.5)]"
             style={{ width: `${((current + 1) / questions.length) * 100}%` }}
           />
         </div>
 
         {/* Question Card */}
-        <div className="glass-card rounded-3xl p-8 mb-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-[40px] -mr-10 -mt-10"></div>
-          <p className="text-[10px] text-blue-400 uppercase tracking-widest mb-4 font-bold relative z-10 flex items-center gap-2">
-             <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Question
+        <div className="glass-card rounded-3xl p-8 mb-8 relative overflow-hidden border border-white/10">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-[40px] -mr-10 -mt-10"></div>
+          <p className="text-[10px] text-amber-500 uppercase tracking-widest mb-4 font-bold relative z-10 flex items-center gap-2">
+             <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Question
           </p>
           <h2 className="text-2xl font-medium text-white leading-relaxed relative z-10">{q.question}</h2>
         </div>
@@ -163,14 +160,14 @@ export default function Test() {
               onClick={() => handleAnswer(index)}
               className={`text-left px-6 py-5 rounded-2xl transition-all font-medium border relative overflow-hidden group
                 ${isSelected
-                  ? 'bg-blue-600/20 border-blue-500/50 text-white shadow-[0_0_20px_rgba(59,130,246,0.15)] scale-[1.01]'
-                  : 'bg-slate-800/40 border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50'
+                  ? 'bg-[#0f0f0f] border-amber-500/50 text-white shadow-[0_0_20px_rgba(245,158,11,0.1)] scale-[1.01]'
+                  : 'bg-[#050505]/40 border-white/10 text-slate-300 hover:bg-white/5 hover:border-white/20'
                 }`}
             >
-              {isSelected && <div className="absolute inset-0 bg-blue-500/10 mix-blend-overlay pointer-events-none"></div>}
+              {isSelected && <div className="absolute inset-0 bg-amber-500/5 mix-blend-overlay pointer-events-none"></div>}
               <div className="flex items-center gap-4 relative z-10">
-                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${isSelected ? 'border-blue-400' : 'border-slate-600 group-hover:border-slate-500'}`}>
-                    {isSelected && <div className="w-3 h-3 bg-blue-400 rounded-full"></div>}
+                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${isSelected ? 'border-amber-500' : 'border-slate-600 group-hover:border-slate-500'}`}>
+                    {isSelected && <div className="w-3 h-3 bg-amber-500 rounded-full shadow-[0_0_5px_rgba(245,158,11,0.5)]"></div>}
                  </div>
                  <span className="text-[16px] leading-relaxed">{option}</span>
               </div>
@@ -181,8 +178,7 @@ export default function Test() {
         <button
           onClick={handleNext}
           disabled={selected === null}
-          className={`w-full premium-btn rounded-xl py-4 font-bold tracking-wide transition-all ${selected === null ? 'opacity-50 cursor-not-allowed contrast-75' : 'shadow-lg shadow-blue-500/20'}`}
-          style={selected !== null ? { background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' } : {}}>
+          className={`w-full premium-btn-gold rounded-xl py-4 font-bold tracking-wide transition-all ${selected === null ? 'opacity-50 cursor-not-allowed contrast-75' : 'shadow-lg shadow-amber-500/20'}`}>
           {current + 1 === questions.length ? 'Submit Assessment' : 'Next Question →'}
         </button>
 

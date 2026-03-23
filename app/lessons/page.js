@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { useRouter } from 'next/navigation'
 
 const lessonData = {
   A1: {
@@ -386,7 +385,7 @@ const lessonData = {
 const colorMap = {
   emerald: {
     border: 'border-emerald-500/30',
-    bg: 'bg-emerald-900/20',
+    bg: 'bg-emerald-500/10',
     badge: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]',
     dot: 'bg-emerald-400',
     text: 'text-emerald-400',
@@ -398,18 +397,17 @@ export default function Lessons() {
   const [userLevel, setUserLevel] = useState(null)
   const [loading, setLoading] = useState(true)
   const [openLesson, setOpenLesson] = useState(null)
-  const router = useRouter()
 
   useEffect(() => {
     const load = async () => {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { router.push('/login'); return }
+      if (!user) { window.location.href = '/login'; return }
       const { data } = await supabase.from('profiles').select('level').eq('id', user.id).single()
       setUserLevel(data?.level || null)
       setLoading(false)
     }
     load()
-  }, [router])
+  }, [])
 
   if (loading) {
     return (
@@ -423,16 +421,15 @@ export default function Lessons() {
     return (
       <main className="min-h-screen flex items-center justify-center px-4 relative z-10 transition-colors">
         <div className="text-center max-w-md w-full glass-card p-10 rounded-3xl">
-          <div className="w-20 h-20 mx-auto rounded-2xl bg-slate-800/80 border border-slate-600/50 flex items-center justify-center text-4xl mb-6 shadow-lg">
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-4xl mb-6 shadow-lg">
             📊
           </div>
-          <h2 className="text-2xl font-bold text-white mb-3">Locked</h2>
+          <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">Locked</h2>
           <p className="text-slate-400 font-medium mb-8 leading-relaxed">Please complete the initial AI assessment to unlock your personalized curriculum.</p>
-          <button onClick={() => router.push('/test')}
-            className="w-full premium-btn rounded-xl py-3.5 font-bold shadow-[0_0_20px_rgba(59,130,246,0.2)]"
-            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' }}>
+          <a href="/test"
+            className="block w-full premium-btn-gold text-center rounded-xl px-5 py-3.5 font-bold shadow-lg shadow-amber-500/20">
             Take Level Test →
-          </button>
+          </a>
         </div>
       </main>
     )
@@ -448,7 +445,7 @@ export default function Lessons() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
           <div className="flex items-center gap-4">
-             <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+             <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/20">
                 <span className="text-2xl">📚</span>
              </div>
              <div>
@@ -456,13 +453,13 @@ export default function Lessons() {
                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Your Personal Path</p>
              </div>
           </div>
-          <button onClick={() => window.location.href = '/dashboard'} className="text-sm font-medium text-slate-400 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-full border border-white/5 hover:border-white/20 hidden sm:block">
+          <a href="/dashboard" className="text-sm font-medium text-slate-400 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:border-white/20 hidden sm:block">
             ← Dashboard
-          </button>
+          </a>
         </div>
 
         {/* Level Banner */}
-        <div className="glass-card rounded-[2rem] p-8 mb-8 relative overflow-hidden group">
+        <div className="glass-card rounded-[2rem] p-8 mb-8 relative overflow-hidden group border-white/10">
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-emerald-500/20 transition-all duration-700"></div>
           
           <div className="flex items-center gap-3 mb-4 relative z-10">
@@ -472,14 +469,14 @@ export default function Lessons() {
           </div>
           <h2 className="text-xl font-medium text-slate-200 leading-relaxed mb-6 max-w-xl relative z-10">"{data.intro}"</h2>
           
-          <div className="w-full h-1 bg-slate-800/50 rounded-full overflow-hidden relative z-10">
+          <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden relative z-10">
              <div className="h-full bg-emerald-500 w-1/4 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
           </div>
           <p className="text-[10px] uppercase font-bold text-emerald-500/70 mt-3 tracking-widest relative z-10">Progress: Not Started</p>
         </div>
 
         <h3 className="font-bold text-slate-300 mb-5 ml-2 uppercase tracking-widest text-sm flex items-center gap-3">
-          Modules <span className="h-[1px] flex-1 bg-gradient-to-r from-slate-700 to-transparent"></span>
+          Modules <span className="h-[1px] flex-1 bg-gradient-to-r from-[#333] to-transparent"></span>
         </h3>
 
         {/* Lesson Cards */}
@@ -488,23 +485,23 @@ export default function Lessons() {
             const isOpen = openLesson === lesson.id;
             return (
             <div key={lesson.id}
-              className={`glass-card border rounded-[1.5rem] overflow-hidden transition-all duration-300 ${isOpen ? 'border-emerald-500/30 bg-slate-800/80 shadow-[0_0_30px_rgba(16,185,129,0.05)] scale-[1.01]' : 'border-slate-800 hover:border-slate-700'}`}>
+              className={`glass-card border rounded-[1.5rem] overflow-hidden transition-all duration-300 ${isOpen ? 'border-emerald-500/30 bg-[#0f0f0f] shadow-[0_0_30px_rgba(16,185,129,0.05)] scale-[1.01]' : 'border-white/10 hover:border-white/20'}`}>
 
               {/* Card Header */}
               <button
                 onClick={() => setOpenLesson(isOpen ? null : lesson.id)}
                 className="w-full flex items-center gap-5 p-6 text-left active:scale-[0.99] transition-transform">
                 
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-sm transition-colors duration-300 ${isOpen ? 'bg-emerald-500/20 border border-emerald-500/30' : 'bg-slate-800 border border-slate-700'}`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-sm transition-colors duration-300 ${isOpen ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-[#050505] border border-white/5'}`}>
                   {lesson.emoji}
                 </div>
                 
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-1.5">
-                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Mod {index + 1}</span>
+                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/5 px-2 py-0.5 rounded border border-emerald-500/20">Mod {index + 1}</span>
                     <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{lesson.topic}</p>
                   </div>
-                  <h3 className={`font-bold text-lg transition-colors ${isOpen ? 'text-white' : 'text-slate-200'}`}>{lesson.title}</h3>
+                  <h3 className={`font-bold text-lg transition-colors ${isOpen ? 'text-white tracking-tight' : 'text-slate-200 tracking-tight'}`}>{lesson.title}</h3>
                 </div>
                 
                 <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-300 ${isOpen ? 'border-emerald-500 text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.2)] bg-emerald-500/10' : 'border-white/10 text-slate-500 bg-white/5'}`}>
@@ -515,7 +512,7 @@ export default function Lessons() {
               {/* Expandable Content */}
               <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                 <div className="px-6 pb-6 pt-2 space-y-6">
-                  <p className="text-slate-300 text-[15px] leading-relaxed pl-[76px] pb-2 border-b border-white/5">{lesson.content}</p>
+                  <p className="text-slate-300 text-[15px] leading-relaxed pl-[76px] pb-2 border-b border-white/10">{lesson.content}</p>
 
                   <div className="pl-[76px]">
                     <div className="flex items-center gap-2 mb-3">
@@ -524,7 +521,7 @@ export default function Lessons() {
                     </div>
                     <ul className="space-y-2.5">
                       {lesson.examples.map((ex, i) => (
-                        <li key={i} className="flex items-start gap-3 text-sm text-slate-200 bg-slate-900/40 rounded-lg p-3 border border-slate-800/80">
+                        <li key={i} className="flex items-start gap-3 text-sm text-slate-200 bg-[#050505] rounded-lg p-3 border border-white/5">
                           <span className="text-amber-500 mt-0.5">→</span> <span className="italic">"{ex}"</span>
                         </li>
                       ))}
@@ -541,11 +538,10 @@ export default function Lessons() {
                           </p>
                           <p className="text-emerald-50 font-medium text-[15px]">{lesson.exercise}</p>
                         </div>
-                        <button onClick={() => router.push('/writing')}
-                          className="premium-btn text-[12px] font-bold rounded-xl px-5 py-3 whitespace-nowrap shadow-[0_0_15px_rgba(16,185,129,0.2)]"
-                          style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}>
+                        <a href="/writing"
+                          className="premium-btn text-[12px] font-bold rounded-xl px-5 py-3 whitespace-nowrap">
                           Start Practice Session
-                        </button>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -557,10 +553,10 @@ export default function Lessons() {
 
         {/* CTA */}
         <div className="mt-10 mb-10 flex gap-4">
-          <button onClick={() => window.location.href = '/dashboard'}
-            className="flex-1 glass-card hover:bg-slate-800/80 border border-slate-700/50 rounded-2xl py-4 text-sm font-bold text-slate-300 transition-colors uppercase tracking-widest">
+          <a href="/dashboard"
+            className="flex-1 text-center glass-card hover:bg-white/10 border border-white/20 rounded-2xl py-4 text-sm font-bold text-white transition-colors uppercase tracking-widest">
             Dashboard
-          </button>
+          </a>
         </div>
 
       </div>
