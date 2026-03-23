@@ -48,7 +48,7 @@ TIPS: [One short tip for answering this question well, 1 sentence]
 ${round >= 4 ? 'SUMMARY: [Overall 3-4 sentence summary of their performance and what to improve]' : ''}`
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-flash-lite-latest' })
     const result = await model.generateContent(prompt)
     const text = result.response.text()
 
