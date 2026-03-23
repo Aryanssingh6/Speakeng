@@ -22,12 +22,12 @@ const questions = [
 ]
 
 function getLevel(score) {
-  if (score <= 4) return { level: 'A1', label: 'Beginner', color: 'text-red-400', desc: 'English basics abhi seekhni hain' }
-  if (score <= 7) return { level: 'A2', label: 'Elementary', color: 'text-orange-400', desc: 'Basic English aati hai, aur practice chahiye' }
-  if (score <= 9) return { level: 'B1', label: 'Intermediate', color: 'text-yellow-400', desc: 'Theek hai, aur improve kar sakte ho' }
-  if (score <= 11) return { level: 'B2', label: 'Upper Intermediate', color: 'text-green-400', desc: 'Achhi English hai, polish karo' }
-  if (score <= 13) return { level: 'C1', label: 'Advanced', color: 'text-blue-400', desc: 'Bahut achhi English hai!' }
-  return { level: 'C2', label: 'Mastery', color: 'text-purple-400', desc: 'Excellent! Native level English!' }
+  if (score <= 4) return { level: 'A1', label: 'Beginner', color: 'from-red-500 to-rose-400', glow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', desc: 'English basics abhi seekhni hain' }
+  if (score <= 7) return { level: 'A2', label: 'Elementary', color: 'from-orange-500 to-amber-400', glow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', desc: 'Basic English aati hai, aur practice chahiye' }
+  if (score <= 9) return { level: 'B1', label: 'Intermediate', color: 'from-yellow-400 to-amber-300', glow: 'shadow-[0_0_20px_rgba(250,204,21,0.3)]', desc: 'Theek hai, aur improve kar sakte ho' }
+  if (score <= 11) return { level: 'B2', label: 'Upper Intermediate', color: 'from-green-500 to-emerald-400', glow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', desc: 'Achhi English hai, polish karo' }
+  if (score <= 13) return { level: 'C1', label: 'Advanced', color: 'from-blue-500 to-cyan-400', glow: 'shadow-[0_0_20px_rgba(56,189,248,0.3)]', desc: 'Bahut achhi English hai!' }
+  return { level: 'C2', label: 'Mastery', color: 'from-purple-500 to-fuchsia-400', glow: 'shadow-[0_0_20px_rgba(217,70,239,0.3)]', desc: 'Excellent! Native level English!' }
 }
 
 export default function Test() {
@@ -78,29 +78,41 @@ export default function Test() {
   if (finished) {
     const levelData = getLevel(score)
     return (
-      <main className="min-h-screen bg-gradient-to-b from-blue-950 to-blue-900 text-white flex items-center justify-center px-4">
-        <div className="bg-blue-800/40 border border-blue-700 rounded-2xl p-8 w-full max-w-lg text-center">
-          <div className="text-6xl mb-4">🎉</div>
-          <h2 className="text-2xl font-bold mb-2">Test Complete!</h2>
-          <p className="text-blue-300 mb-6">Tumhara result ready hai</p>
+      <main className="min-h-screen flex items-center justify-center px-4 relative z-10 transition-colors">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] -mr-20 -mt-20"></div>
+        <div className="glass-card rounded-[2.5rem] p-10 w-full max-w-xl text-center relative z-10">
+          <div className="w-24 h-24 mx-auto rounded-3xl bg-slate-800/80 border border-slate-600/50 flex items-center justify-center text-5xl mb-6 shadow-lg">
+            🎉
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">Assessment Complete</h2>
+          <p className="text-slate-400 mb-8 font-medium">We've calculated your proficiency score.</p>
 
-          <div className="bg-blue-900/50 rounded-2xl p-6 mb-6">
-            <p className="text-5xl font-bold mb-2">{score}/{questions.length}</p>
-            <p className={`text-3xl font-bold mb-1 ${levelData.color}`}>{levelData.level}</p>
-            <p className="text-xl text-blue-200 mb-2">{levelData.label}</p>
-            <p className="text-blue-300 text-sm">{levelData.desc}</p>
+          <div className={\`rounded-3xl p-8 mb-8 bg-gradient-to-br \${levelData.color} \${levelData.glow} relative overflow-hidden\`}>
+            <div className="absolute inset-0 bg-black/20 mix-blend-overlay"></div>
+            <p className="text-6xl font-black text-white drop-shadow-lg mb-2 relative z-10">{score}<span className="text-3xl opacity-80">/{questions.length}</span></p>
+            <p className="text-4xl font-black text-white drop-shadow-md mb-2 relative z-10 tracking-widest">{levelData.level}</p>
+            <p className="text-xl text-white/90 font-bold mb-2 relative z-10 tracking-wider uppercase">{levelData.label}</p>
+            <p className="text-white/80 text-sm font-medium relative z-10">"{levelData.desc}"</p>
           </div>
 
-          {saving ? (
-            <p className="text-blue-300 mb-4">Result save ho raha hai...</p>
-          ) : (
-            <p className="text-green-400 mb-4">Result save ho gaya! ✅</p>
-          )}
+          <div className="h-6 mb-6">
+            {saving ? (
+              <p className="text-slate-400 text-sm flex items-center justify-center gap-2">
+                 <span className="w-4 h-4 rounded-full border-t-2 border-slate-400 animate-spin"></span>
+                 Saving results...
+              </p>
+            ) : (
+              <p className="text-emerald-400 text-sm font-bold flex items-center justify-center gap-2">
+                 <span className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/50">✓</span>
+                 Profile Updated
+              </p>
+            )}
+          </div>
 
           <button
             onClick={() => router.push('/dashboard')}
-            className="w-full bg-blue-500 hover:bg-blue-400 rounded-xl py-3 font-semibold transition">
-            Dashboard Pe Jao
+            className="w-full premium-btn rounded-xl py-4 font-bold tracking-wide shadow-lg shadow-blue-500/20 text-[15px]">
+            Return to Dashboard →
           </button>
         </div>
       </main>
@@ -110,48 +122,68 @@ export default function Test() {
   const q = questions[current]
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-950 to-blue-900 text-white px-4 py-8">
+    <main className="min-h-screen text-slate-200 px-4 py-8 md:py-12 relative z-10 transition-colors">
       <div className="max-w-2xl mx-auto">
 
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl font-bold text-blue-300">SpeakEng — Level Test</h1>
-          <span className="text-blue-400 text-sm">{current + 1}/{questions.length}</span>
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-3">
+             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                <span className="text-lg">📈</span>
+             </div>
+             <h1 className="text-xl font-bold text-white tracking-tight">Proficiency Test</h1>
+          </div>
+          <span className="bg-slate-800 border border-slate-700 px-4 py-1.5 rounded-full text-xs font-bold text-blue-400 tracking-wider">Q {current + 1} OF {questions.length}</span>
         </div>
 
         {/* Progress bar */}
-        <div className="w-full bg-blue-900 rounded-full h-2 mb-8">
+        <div className="w-full h-1 bg-slate-800/80 rounded-full mb-10 overflow-hidden">
           <div
-            className="bg-blue-400 h-2 rounded-full transition-all"
-            style={{ width: `${((current + 1) / questions.length) * 100}%` }}
+            className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(56,189,248,0.5)]"
+            style={{ width: \`\${((current + 1) / questions.length) * 100}%\` }}
           />
         </div>
 
-        <div className="bg-blue-800/40 border border-blue-700 rounded-2xl p-6 mb-6">
-          <p className="text-sm text-blue-400 mb-3">Question {current + 1}</p>
-          <h2 className="text-lg font-semibold">{q.question}</h2>
+        {/* Question Card */}
+        <div className="glass-card rounded-3xl p-8 mb-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-[40px] -mr-10 -mt-10"></div>
+          <p className="text-[10px] text-blue-400 uppercase tracking-widest mb-4 font-bold relative z-10 flex items-center gap-2">
+             <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Question
+          </p>
+          <h2 className="text-2xl font-medium text-white leading-relaxed relative z-10">{q.question}</h2>
         </div>
 
-        <div className="flex flex-col gap-3 mb-6">
-          {q.options.map((option, index) => (
+        {/* Options */}
+        <div className="flex flex-col gap-4 mb-10">
+          {q.options.map((option, index) => {
+            const isSelected = selected === index;
+            return (
             <button
               key={index}
               onClick={() => handleAnswer(index)}
-              className={`text-left px-5 py-4 rounded-xl border transition font-medium
-                ${selected === index
-                  ? 'bg-blue-500 border-blue-400 text-white'
-                  : 'bg-blue-800/30 border-blue-700 text-blue-200 hover:bg-blue-700/50'
-                }`}
+              className={\`text-left px-6 py-5 rounded-2xl transition-all font-medium border relative overflow-hidden group
+                \${isSelected
+                  ? 'bg-blue-600/20 border-blue-500/50 text-white shadow-[0_0_20px_rgba(59,130,246,0.15)] scale-[1.01]'
+                  : 'bg-slate-800/40 border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50'
+                }\`}
             >
-              {option}
+              {isSelected && <div className="absolute inset-0 bg-blue-500/10 mix-blend-overlay pointer-events-none"></div>}
+              <div className="flex items-center gap-4 relative z-10">
+                 <div className={\`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors \${isSelected ? 'border-blue-400' : 'border-slate-600 group-hover:border-slate-500'}\`}>
+                    {isSelected && <div className="w-3 h-3 bg-blue-400 rounded-full"></div>}
+                 </div>
+                 <span className="text-[16px] leading-relaxed">{option}</span>
+              </div>
             </button>
-          ))}
+          )})}
         </div>
 
         <button
           onClick={handleNext}
           disabled={selected === null}
-          className="w-full bg-blue-500 hover:bg-blue-400 disabled:bg-blue-800 disabled:text-blue-500 rounded-xl py-3 font-semibold transition">
-          {current + 1 === questions.length ? 'Result Dekho' : 'Agla Sawal'}
+          className={\`w-full premium-btn rounded-xl py-4 font-bold tracking-wide transition-all \${selected === null ? 'opacity-50 cursor-not-allowed contrast-75' : 'shadow-lg shadow-blue-500/20'}\`}
+          style={selected !== null ? { background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' } : {}}>
+          {current + 1 === questions.length ? 'Submit Assessment' : 'Next Question →'}
         </button>
 
       </div>

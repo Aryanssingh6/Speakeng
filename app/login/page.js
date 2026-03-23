@@ -21,16 +21,12 @@ export default function Login() {
         password
       })
 
-      console.log('Login data:', data)
-      console.log('Login error:', error)
-
       if (error) {
-        setError('Email ya password galat hai! ' + error.message)
+        setError(error.message)
       } else if (data?.user) {
         window.location.href = '/dashboard'
       }
     } catch (err) {
-      console.log('Catch error:', err)
       setError('Kuch gadbad hui: ' + err.message)
     }
 
@@ -38,59 +34,68 @@ export default function Login() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-950 to-blue-900 text-white flex items-center justify-center px-4">
-      <div className="bg-blue-800/40 border border-blue-700 rounded-2xl p-8 w-full max-w-md">
+    <main className="min-h-screen flex items-center justify-center px-4 relative z-10 overflow-hidden">
+      
+      {/* Dynamic Background Elements */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-        <h1 className="text-3xl font-bold text-center mb-2">SpeakEng</h1>
-        <p className="text-blue-300 text-center mb-8">Wapas swagat hai! 🙏</p>
+      <div className="glass-card rounded-[2.5rem] p-8 md:p-12 w-full max-w-md relative z-10 shadow-2xl">
+        
+        <div className="flex justify-center mb-6">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <span className="text-white font-bold text-3xl">S</span>
+          </div>
+        </div>
 
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+        <h1 className="text-3xl font-bold text-center text-white mb-2 tracking-tight">Welcome Back</h1>
+        <p className="text-slate-400 text-center mb-8 font-medium">Please enter your details to sign in.</p>
 
+        <form onSubmit={handleLogin} className="flex flex-col gap-5">
           <div>
-            <label className="text-sm text-blue-300 mb-1 block">Email</label>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 block ml-1">Email Address</label>
             <input
               type="email"
-              placeholder="tumhari@email.com"
+              placeholder="name@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full bg-blue-900/50 border border-blue-600 rounded-xl px-4 py-3 text-white placeholder-blue-400 focus:outline-none focus:border-blue-400"
+              className="w-full glass-input rounded-xl px-5 py-4 text-white placeholder-slate-500 focus:ring-1 focus:ring-blue-500/50"
             />
           </div>
 
           <div>
-            <label className="text-sm text-blue-300 mb-1 block">Password</label>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 block ml-1">Password</label>
             <input
               type="password"
-              placeholder="Apna password daalo"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full bg-blue-900/50 border border-blue-600 rounded-xl px-4 py-3 text-white placeholder-blue-400 focus:outline-none focus:border-blue-400"
+              className="w-full glass-input rounded-xl px-5 py-4 text-white placeholder-slate-500 focus:ring-1 focus:ring-blue-500/50"
             />
           </div>
 
           {error && (
-            <p className="text-center text-sm text-red-300 bg-red-900/30 rounded-xl px-4 py-3">
-              {error}
-            </p>
+            <div className="bg-rose-500/10 border border-rose-500/20 rounded-xl px-5 py-4 flex items-start gap-3 mt-2 animate-in fade-in slide-in-from-top-2">
+              <span className="text-rose-500 mt-0.5">⚠️</span>
+              <p className="text-sm text-rose-200/90 leading-relaxed">{error.includes('Email not confirmed') ? 'Email not confirmed! (Hint: Turn off "Confirm email" in Supabase settings)' : error}</p>
+            </div>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-400 disabled:bg-blue-700 rounded-xl py-3 font-semibold transition mt-2"
+            className={\`w-full premium-btn rounded-xl py-4 font-bold tracking-wide mt-4 shadow-lg shadow-blue-500/20 \${loading ? 'opacity-70 cursor-wait' : ''}\`}
           >
-            {loading ? 'Login ho raha hai...' : 'Login Karo'}
+            {loading ? 'Authenticating...' : 'Sign In'}
           </button>
-
         </form>
 
-        <p className="text-center text-blue-400 text-sm mt-6">
-          Naya account chahiye?{' '}
-          <a href="/register" className="text-blue-300 underline">Register karo</a>
+        <p className="text-center text-slate-400 text-sm mt-8 font-medium">
+          Don't have an account?{' '}
+          <a href="/register" className="text-blue-400 hover:text-blue-300 font-bold underline transition-colors">Sign up</a>
         </p>
-
       </div>
     </main>
   )

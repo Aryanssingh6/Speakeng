@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 const lessonData = {
   A1: {
-    color: 'red',
+    color: 'emerald',
     label: 'Beginner',
     intro: 'A1 level pe basic English seekhte hain — simple sentences, common words, aur greetings.',
     lessons: [
@@ -68,7 +68,7 @@ const lessonData = {
     ]
   },
   A2: {
-    color: 'orange',
+    color: 'emerald',
     label: 'Elementary',
     intro: 'A2 level pe hum daily life ke baare mein baat karna seekhenge — present tense, simple past, aur common phrases.',
     lessons: [
@@ -131,7 +131,7 @@ const lessonData = {
     ]
   },
   B1: {
-    color: 'yellow',
+    color: 'emerald',
     label: 'Intermediate',
     intro: 'B1 level pe hum opinions dena, future plans banana, aur connected sentences likhna seekhenge.',
     lessons: [
@@ -194,7 +194,7 @@ const lessonData = {
     ]
   },
   B2: {
-    color: 'green',
+    color: 'emerald',
     label: 'Upper Intermediate',
     intro: 'B2 level pe hum advanced grammar, idioms, aur confident communication skills develop karenge.',
     lessons: [
@@ -256,7 +256,7 @@ const lessonData = {
     ]
   },
   C1: {
-    color: 'blue',
+    color: 'emerald',
     label: 'Advanced',
     intro: 'C1 level — sophisticated grammar, nuanced vocabulary, aur professional communication skills.',
     lessons: [
@@ -319,7 +319,7 @@ const lessonData = {
     ]
   },
   C2: {
-    color: 'purple',
+    color: 'emerald',
     label: 'Mastery',
     intro: 'C2 level — near-native fluency. Polish your nuance, style, and precision in English.',
     lessons: [
@@ -377,19 +377,21 @@ const lessonData = {
           'Passive to active: "Mistakes were made." → "We made mistakes."',
           'Vary sentence length for rhythm.',
         ],
-        exercise: 'Take any paragraph you've written and revise it using today\'s techniques.'
+        exercise: 'Take any paragraph you\'ve written and revise it using today\'s techniques.'
       },
     ]
   }
 }
 
 const colorMap = {
-  red: { border: 'border-red-700/50', bg: 'bg-red-900/20', badge: 'bg-red-800/60 text-red-300', dot: 'bg-red-400', text: 'text-red-400' },
-  orange: { border: 'border-orange-700/50', bg: 'bg-orange-900/20', badge: 'bg-orange-800/60 text-orange-300', dot: 'bg-orange-400', text: 'text-orange-400' },
-  yellow: { border: 'border-yellow-700/50', bg: 'bg-yellow-900/20', badge: 'bg-yellow-800/60 text-yellow-300', dot: 'bg-yellow-400', text: 'text-yellow-400' },
-  green: { border: 'border-green-700/50', bg: 'bg-green-900/20', badge: 'bg-green-800/60 text-green-300', dot: 'bg-green-400', text: 'text-green-400' },
-  blue: { border: 'border-blue-700/50', bg: 'bg-blue-900/20', badge: 'bg-blue-800/60 text-blue-300', dot: 'bg-blue-400', text: 'text-blue-400' },
-  purple: { border: 'border-purple-700/50', bg: 'bg-purple-900/20', badge: 'bg-purple-800/60 text-purple-300', dot: 'bg-purple-400', text: 'text-purple-400' },
+  emerald: {
+    border: 'border-emerald-500/30',
+    bg: 'bg-emerald-900/20',
+    badge: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]',
+    dot: 'bg-emerald-400',
+    text: 'text-emerald-400',
+    glow: 'shadow-[0_0_20px_rgba(16,185,129,0.1)]'
+  }
 }
 
 export default function Lessons() {
@@ -411,22 +413,25 @@ export default function Lessons() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-blue-950 to-blue-900 flex items-center justify-center">
-        <p className="text-white text-xl">Loading...</p>
+      <main className="min-h-screen flex items-center justify-center relative z-10 transition-colors">
+        <div className="w-8 h-8 rounded-full border-t-2 border-r-2 border-emerald-500 animate-spin"></div>
       </main>
     )
   }
 
   if (!userLevel || !lessonData[userLevel]) {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-blue-950 to-blue-900 text-white flex items-center justify-center px-4">
-        <div className="text-center">
-          <div className="text-6xl mb-4">📊</div>
-          <h2 className="text-2xl font-bold mb-2">Pehle Level Test Do!</h2>
-          <p className="text-blue-300 mb-6">Tumhara koi level set nahi hai. Test do aur phir apne level ke lessons dekho.</p>
+      <main className="min-h-screen flex items-center justify-center px-4 relative z-10 transition-colors">
+        <div className="text-center max-w-md w-full glass-card p-10 rounded-3xl">
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-slate-800/80 border border-slate-600/50 flex items-center justify-center text-4xl mb-6 shadow-lg">
+            📊
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-3">Locked</h2>
+          <p className="text-slate-400 font-medium mb-8 leading-relaxed">Please complete the initial AI assessment to unlock your personalized curriculum.</p>
           <button onClick={() => router.push('/test')}
-            className="bg-blue-500 hover:bg-blue-400 rounded-xl px-6 py-3 font-semibold transition">
-            Level Test Shuru Karo →
+            className="w-full premium-btn rounded-xl py-3.5 font-bold shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' }}>
+            Take Level Test →
           </button>
         </div>
       </main>
@@ -434,92 +439,127 @@ export default function Lessons() {
   }
 
   const data = lessonData[userLevel]
-  const colors = colorMap[data.color]
+  const colors = colorMap.emerald
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-950 to-blue-900 text-white px-4 py-8">
-      <div className="max-w-2xl mx-auto">
+    <main className="min-h-screen text-slate-200 px-4 py-8 md:py-12 relative z-10 transition-colors duration-500">
+      <div className="max-w-3xl mx-auto">
 
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl font-bold text-blue-300">📚 Lessons</h1>
-          <button onClick={() => router.push('/dashboard')} className="text-sm text-blue-400 hover:text-white transition">
+        <div className="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
+          <div className="flex items-center gap-4">
+             <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                <span className="text-2xl">📚</span>
+             </div>
+             <div>
+               <h1 className="text-2xl font-bold text-white tracking-tight">Curated Lessons</h1>
+               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Your Personal Path</p>
+             </div>
+          </div>
+          <button onClick={() => router.push('/dashboard')} className="text-sm font-medium text-slate-400 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-full border border-white/5 hover:border-white/20 hidden sm:block">
             ← Dashboard
           </button>
         </div>
 
         {/* Level Banner */}
-        <div className={`${colors.bg} ${colors.border} border rounded-2xl p-6 mb-6`}>
-          <div className="flex items-center gap-3 mb-2">
-            <span className={`text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full ${colors.badge}`}>
-              {userLevel} — {data.label}
+        <div className="glass-card rounded-[2rem] p-8 mb-8 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-emerald-500/20 transition-all duration-700"></div>
+          
+          <div className="flex items-center gap-3 mb-4 relative z-10">
+            <span className={\`text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full \${colors.badge}\`}>
+              {userLevel} • {data.label} Level
             </span>
           </div>
-          <p className="text-blue-200 text-sm leading-relaxed">{data.intro}</p>
+          <h2 className="text-xl font-medium text-slate-200 leading-relaxed mb-6 max-w-xl relative z-10">"{data.intro}"</h2>
+          
+          <div className="w-full h-1 bg-slate-800/50 rounded-full overflow-hidden relative z-10">
+             <div className="h-full bg-emerald-500 w-1/4 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+          </div>
+          <p className="text-[10px] uppercase font-bold text-emerald-500/70 mt-3 tracking-widest relative z-10">Progress: Not Started</p>
         </div>
 
+        <h3 className="font-bold text-slate-300 mb-5 ml-2 uppercase tracking-widest text-sm flex items-center gap-3">
+          Modules <span className="h-[1px] flex-1 bg-gradient-to-r from-slate-700 to-transparent"></span>
+        </h3>
+
         {/* Lesson Cards */}
-        <div className="space-y-4">
-          {data.lessons.map((lesson) => (
+        <div className="space-y-5">
+          {data.lessons.map((lesson, index) => {
+            const isOpen = openLesson === lesson.id;
+            return (
             <div key={lesson.id}
-              className="bg-blue-800/40 border border-blue-700 rounded-2xl overflow-hidden">
+              className={\`glass-card border rounded-[1.5rem] overflow-hidden transition-all duration-300 \${isOpen ? 'border-emerald-500/30 bg-slate-800/80 shadow-[0_0_30px_rgba(16,185,129,0.05)] scale-[1.01]' : 'border-slate-800 hover:border-slate-700'}\`}>
 
               {/* Card Header */}
               <button
-                onClick={() => setOpenLesson(openLesson === lesson.id ? null : lesson.id)}
-                className="w-full flex items-center gap-4 p-5 text-left hover:bg-blue-700/20 transition">
-                <span className="text-3xl">{lesson.emoji}</span>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-white">{lesson.title}</h3>
-                  </div>
-                  <p className="text-blue-400 text-xs">{lesson.topic}</p>
+                onClick={() => setOpenLesson(isOpen ? null : lesson.id)}
+                className="w-full flex items-center gap-5 p-6 text-left active:scale-[0.99] transition-transform">
+                
+                <div className={\`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-sm transition-colors duration-300 \${isOpen ? 'bg-emerald-500/20 border border-emerald-500/30' : 'bg-slate-800 border border-slate-700'}\`}>
+                  {lesson.emoji}
                 </div>
-                <span className="text-blue-500 text-sm">{openLesson === lesson.id ? '▲' : '▼'}</span>
+                
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-1.5">
+                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Mod {index + 1}</span>
+                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{lesson.topic}</p>
+                  </div>
+                  <h3 className={\`font-bold text-lg transition-colors \${isOpen ? 'text-white' : 'text-slate-200'}\`}>{lesson.title}</h3>
+                </div>
+                
+                <div className={\`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-300 \${isOpen ? 'border-emerald-500 text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.2)] bg-emerald-500/10' : 'border-white/10 text-slate-500 bg-white/5'}\`}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={\`transition-transform duration-300 \${isOpen ? 'rotate-180' : ''}\`}><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
               </button>
 
               {/* Expandable Content */}
-              {openLesson === lesson.id && (
-                <div className="px-5 pb-5 border-t border-blue-700/50 pt-4 space-y-4">
-                  <p className="text-blue-200 text-sm leading-relaxed">{lesson.content}</p>
+              <div className={\`transition-all duration-500 ease-in-out overflow-hidden \${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}\`}>
+                <div className="px-6 pb-6 pt-2 space-y-6">
+                  <p className="text-slate-300 text-[15px] leading-relaxed pl-[76px] pb-2 border-b border-white/5">{lesson.content}</p>
 
-                  <div>
-                    <p className="text-xs text-blue-400 uppercase tracking-wider mb-2 font-semibold">Examples</p>
-                    <ul className="space-y-2">
+                  <div className="pl-[76px]">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="w-5 h-5 rounded bg-amber-500/20 flex items-center justify-center text-[10px] border border-amber-500/30 text-amber-500">✨</span>
+                      <p className="text-[11px] text-amber-500 uppercase tracking-widest font-bold">Practical Examples</p>
+                    </div>
+                    <ul className="space-y-2.5">
                       {lesson.examples.map((ex, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-blue-100">
-                          <span className={`${colors.dot} rounded-full w-1.5 h-1.5 mt-1.5 flex-shrink-0`}></span>
-                          {ex}
+                        <li key={i} className="flex items-start gap-3 text-sm text-slate-200 bg-slate-900/40 rounded-lg p-3 border border-slate-800/80">
+                          <span className="text-amber-500 mt-0.5">→</span> <span className="italic">"{ex}"</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  <div className={`${colors.bg} ${colors.border} border rounded-xl p-4`}>
-                    <p className="text-xs uppercase tracking-wider font-semibold mb-1" style={{ color: 'inherit' }}>
-                      <span className={colors.text}>✏️ Practice Exercise</span>
-                    </p>
-                    <p className="text-blue-100 text-sm">{lesson.exercise}</p>
-                    <a href="/writing"
-                      className="mt-3 inline-block text-xs bg-blue-600 hover:bg-blue-500 rounded-lg px-3 py-1.5 font-semibold transition">
-                      Writing Page Pe Practice Karo →
-                    </a>
+                  <div className="pl-[76px]">
+                    <div className={\`\${colors.bg} \${colors.border} border rounded-[1.5rem] p-5 relative overflow-hidden\`}>
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-[40px] -mr-10 -mt-10"></div>
+                      <div className="flex justify-between items-start relative z-10 gap-4 flex-col sm:flex-row">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-widest font-bold text-emerald-400 mb-2 flex items-center gap-2">
+                             ✏️ Mission Briefing
+                          </p>
+                          <p className="text-emerald-50 font-medium text-[15px]">{lesson.exercise}</p>
+                        </div>
+                        <button onClick={() => router.push('/writing')}
+                          className="premium-btn text-[12px] font-bold rounded-xl px-5 py-3 whitespace-nowrap shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                          style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}>
+                          Start Practice Session
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
-          ))}
+          )})}
         </div>
 
         {/* CTA */}
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          <button onClick={() => router.push('/writing')}
-            className="bg-blue-700/50 hover:bg-blue-700 border border-blue-600 rounded-xl py-3 text-sm font-semibold transition">
-            ✍️ Writing Practice
-          </button>
-          <button onClick={() => router.push('/interview')}
-            className="bg-blue-500 hover:bg-blue-400 rounded-xl py-3 text-sm font-semibold transition">
-            🎤 Mock Interview
+        <div className="mt-10 mb-10 flex gap-4">
+          <button onClick={() => router.push('/dashboard')}
+            className="flex-1 glass-card hover:bg-slate-800/80 border border-slate-700/50 rounded-2xl py-4 text-sm font-bold text-slate-300 transition-colors uppercase tracking-widest">
+            Dashboard
           </button>
         </div>
 
