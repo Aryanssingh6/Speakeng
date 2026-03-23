@@ -324,8 +324,8 @@ export default function Interview() {
             <button
               onClick={submitAnswer}
               disabled={loading || userAnswer.trim().length < 5}
-              className={`absolute bottom-3 right-3 premium-btn rounded-xl p-2 md:px-4 md:py-2 flex items-center justify-center transition-all ${loading || userAnswer.trim().length < 5 ? 'opacity-50 cursor-not-allowed contrast-75' : ''}`}
-              style={!(loading || userAnswer.trim().length < 5) ? { background: 'linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%)' } : {}}>
+              className={`absolute bottom-3 right-3 premium-btn rounded-xl p-2 md:px-4 md:py-2 flex items-center justify-center transition-all ${loading || 5 > userAnswer.trim().length ? 'opacity-50 cursor-not-allowed contrast-75' : ''}`}
+              style={!(loading || 5 > userAnswer.trim().length) ? { background: 'linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%)' } : {}}>
               <span className="hidden md:inline font-bold text-sm mr-2">{round >= TOTAL_ROUNDS - 1 ? 'Finish' : 'Send'}</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
             </button>

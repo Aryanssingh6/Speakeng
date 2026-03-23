@@ -170,8 +170,8 @@ ENCOURAGEMENT:
         <button
           onClick={getFeedback}
           disabled={loading || wordCount < 10}
-          className={`w-full premium-btn rounded-xl py-4 font-bold tracking-wide text-[15px] transition-all shadow-xl shadow-pink-500/10 mb-10 ${loading || wordCount < 10 ? 'opacity-50 cursor-not-allowed contrast-75' : 'hover:shadow-pink-500/30'}`}
-          style={!(loading || wordCount < 10) ? { background: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)' } : {}}>
+          className={`w-full premium-btn rounded-xl py-4 font-bold tracking-wide text-[15px] transition-all shadow-xl shadow-pink-500/10 mb-10 ${loading || 10 > wordCount ? 'opacity-50 cursor-not-allowed contrast-75' : 'hover:shadow-pink-500/30'}`}
+          style={!(loading || 10 > wordCount) ? { background: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)' } : {}}>
           {loading ? '⏳ Analyzing text with AI...' : '✨ Get Instant Feedback'}
         </button>
 
