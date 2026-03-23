@@ -87,7 +87,7 @@ export default function Test() {
           <h2 className="text-3xl font-bold text-white mb-2">Assessment Complete</h2>
           <p className="text-slate-400 mb-8 font-medium">We've calculated your proficiency score.</p>
 
-          <div className={\`rounded-3xl p-8 mb-8 bg-gradient-to-br \${levelData.color} \${levelData.glow} relative overflow-hidden\`}>
+          <div className={`rounded-3xl p-8 mb-8 bg-gradient-to-br ${levelData.color} ${levelData.glow} relative overflow-hidden`}>
             <div className="absolute inset-0 bg-black/20 mix-blend-overlay"></div>
             <p className="text-6xl font-black text-white drop-shadow-lg mb-2 relative z-10">{score}<span className="text-3xl opacity-80">/{questions.length}</span></p>
             <p className="text-4xl font-black text-white drop-shadow-md mb-2 relative z-10 tracking-widest">{levelData.level}</p>
@@ -110,7 +110,7 @@ export default function Test() {
           </div>
 
           <button
-            onClick={() => router.push('/dashboard')}
+            onClick={() => window.location.href = '/dashboard'}
             className="w-full premium-btn rounded-xl py-4 font-bold tracking-wide shadow-lg shadow-blue-500/20 text-[15px]">
             Return to Dashboard →
           </button>
@@ -140,7 +140,7 @@ export default function Test() {
         <div className="w-full h-1 bg-slate-800/80 rounded-full mb-10 overflow-hidden">
           <div
             className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(56,189,248,0.5)]"
-            style={{ width: \`\${((current + 1) / questions.length) * 100}%\` }}
+            style={{ width: `${((current + 1) / questions.length) * 100}%` }}
           />
         </div>
 
@@ -161,15 +161,15 @@ export default function Test() {
             <button
               key={index}
               onClick={() => handleAnswer(index)}
-              className={\`text-left px-6 py-5 rounded-2xl transition-all font-medium border relative overflow-hidden group
-                \${isSelected
+              className={`text-left px-6 py-5 rounded-2xl transition-all font-medium border relative overflow-hidden group
+                ${isSelected
                   ? 'bg-blue-600/20 border-blue-500/50 text-white shadow-[0_0_20px_rgba(59,130,246,0.15)] scale-[1.01]'
                   : 'bg-slate-800/40 border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50'
-                }\`}
+                }`}
             >
               {isSelected && <div className="absolute inset-0 bg-blue-500/10 mix-blend-overlay pointer-events-none"></div>}
               <div className="flex items-center gap-4 relative z-10">
-                 <div className={\`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors \${isSelected ? 'border-blue-400' : 'border-slate-600 group-hover:border-slate-500'}\`}>
+                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${isSelected ? 'border-blue-400' : 'border-slate-600 group-hover:border-slate-500'}`}>
                     {isSelected && <div className="w-3 h-3 bg-blue-400 rounded-full"></div>}
                  </div>
                  <span className="text-[16px] leading-relaxed">{option}</span>
@@ -181,7 +181,7 @@ export default function Test() {
         <button
           onClick={handleNext}
           disabled={selected === null}
-          className={\`w-full premium-btn rounded-xl py-4 font-bold tracking-wide transition-all \${selected === null ? 'opacity-50 cursor-not-allowed contrast-75' : 'shadow-lg shadow-blue-500/20'}\`}
+          className={`w-full premium-btn rounded-xl py-4 font-bold tracking-wide transition-all ${selected === null ? 'opacity-50 cursor-not-allowed contrast-75' : 'shadow-lg shadow-blue-500/20'}`}
           style={selected !== null ? { background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' } : {}}>
           {current + 1 === questions.length ? 'Submit Assessment' : 'Next Question →'}
         </button>

@@ -19,7 +19,7 @@ export default function Dashboard() {
   const router = useRouter()
 
   useEffect(() => {
-    const timer = setTimeout(async () => {
+    const loadData = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) {
@@ -32,8 +32,8 @@ export default function Dashboard() {
       } catch (err) {
         console.log(err)
       }
-    }, 100)
-    return () => clearTimeout(timer)
+    }
+    loadData()
   }, [router])
 
   if (!user) {

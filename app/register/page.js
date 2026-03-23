@@ -70,18 +70,18 @@ export default function Register() {
           </div>
 
           {message && (
-            <div className={\`border rounded-xl px-5 py-4 flex items-start gap-3 mt-2 animate-in fade-in slide-in-from-top-2 \${message.includes('Account created') ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-rose-500/10 border-rose-500/20'}\`}>
-              <span className={\`mt-0.5 \${message.includes('Account created') ? 'text-emerald-500' : 'text-rose-500'}\`}>
+            <div className={`border rounded-xl px-5 py-4 flex items-start gap-3 mt-2 animate-in fade-in slide-in-from-top-2 ${message.includes('Account created') ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-rose-500/10 border-rose-500/20'}`}>
+              <span className={`mt-0.5 ${message.includes('Account created') ? 'text-emerald-500' : 'text-rose-500'}`}>
                 {message.includes('Account created') ? '✨' : '⚠️'}
               </span>
-              <p className={\`text-sm leading-relaxed \${message.includes('Account created') ? 'text-emerald-200/90' : 'text-rose-200/90'}\`}>
+              <p className={`text-sm leading-relaxed ${message.includes('Account created') ? 'text-emerald-200/90' : 'text-rose-200/90'}`}>
                 {message}
               </p>
             </div>
           )}
 
           <button type="submit" disabled={loading}
-            className={\`w-full premium-btn rounded-xl py-4 font-bold tracking-wide mt-4 shadow-lg shadow-fuchsia-500/20 \${loading ? 'opacity-70 cursor-wait' : ''}\`}
+            className={`w-full premium-btn rounded-xl py-4 font-bold tracking-wide mt-4 shadow-lg shadow-fuchsia-500/20 ${loading ? 'opacity-70 cursor-wait' : ''}`}
             style={{ background: 'linear-gradient(135deg, #d946ef 0%, #3b82f6 100%)' }}>
             {loading ? 'Creating...' : 'Sign Up'}
           </button>

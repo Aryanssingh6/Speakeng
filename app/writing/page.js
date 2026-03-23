@@ -129,7 +129,7 @@ ENCOURAGEMENT:
              </div>
              <h1 className="text-2xl font-bold text-white tracking-tight">Writing Studio</h1>
           </div>
-          <button onClick={() => router.push('/dashboard')}
+          <button onClick={() => window.location.href = '/dashboard'}
             className="text-sm font-medium text-slate-400 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-full border border-white/5 hover:border-white/20">
             ← Dashboard
           </button>

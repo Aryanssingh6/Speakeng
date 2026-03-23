@@ -127,7 +127,7 @@ export default function Interview() {
               style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%)' }}>
               {loading ? 'Initializing Interface...' : 'Start Interview Session 🚀'}
             </button>
-            <button onClick={() => router.push('/dashboard')}
+            <button onClick={() => window.location.href = '/dashboard'}
               className="w-full glass-panel hover:bg-slate-800/50 rounded-xl py-3 font-semibold text-slate-400 transition-colors">
               Return to Dashboard
             </button>
@@ -191,7 +191,7 @@ export default function Interview() {
               style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}>
               Start New Session 🔄
             </button>
-            <button onClick={() => router.push('/dashboard')}
+            <button onClick={() => window.location.href = '/dashboard'}
               className="glass-card hover:bg-slate-800/70 rounded-xl py-4 text-sm font-bold text-slate-300 transition-colors">
               Return to Dashboard
             </button>
@@ -226,13 +226,13 @@ export default function Interview() {
           </div>
           <div className="flex items-center gap-3">
              <span className="bg-slate-800 border border-slate-700 px-3 py-1 rounded-full text-xs font-bold text-violet-300 tracking-wider">Round {round + 1}/{TOTAL_ROUNDS}</span>
-             <button onClick={() => router.push('/dashboard')} className="w-8 h-8 flex items-center justify-center rounded-full glass-panel hover:bg-white/10 text-slate-400 transition-colors">×</button>
+             <button onClick={() => window.location.href = '/dashboard'} className="w-8 h-8 flex items-center justify-center rounded-full glass-panel hover:bg-white/10 text-slate-400 transition-colors">×</button>
           </div>
         </div>
 
         {/* Progress Bar */}
         <div className="w-full h-0.5 bg-slate-800">
-           <div className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-400 transition-all duration-500 ease-out" style={{ width: \`\${((round) / TOTAL_ROUNDS) * 100}%\` }} />
+           <div className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-400 transition-all duration-500 ease-out" style={{ width: `${((round) / TOTAL_ROUNDS) * 100}%` }} />
         </div>
 
         {/* Chat Area */}
@@ -324,7 +324,7 @@ export default function Interview() {
             <button
               onClick={submitAnswer}
               disabled={loading || userAnswer.trim().length < 5}
-              className={\`absolute bottom-3 right-3 premium-btn rounded-xl p-2 md:px-4 md:py-2 flex items-center justify-center transition-all \${loading || userAnswer.trim().length < 5 ? 'opacity-50 cursor-not-allowed contrast-75' : ''}\`}
+              className={`absolute bottom-3 right-3 premium-btn rounded-xl p-2 md:px-4 md:py-2 flex items-center justify-center transition-all ${loading || userAnswer.trim().length < 5 ? 'opacity-50 cursor-not-allowed contrast-75' : ''}`}
               style={!(loading || userAnswer.trim().length < 5) ? { background: 'linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%)' } : {}}>
               <span className="hidden md:inline font-bold text-sm mr-2">{round >= TOTAL_ROUNDS - 1 ? 'Finish' : 'Send'}</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>

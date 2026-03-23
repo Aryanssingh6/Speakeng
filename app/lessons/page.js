@@ -456,7 +456,7 @@ export default function Lessons() {
                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Your Personal Path</p>
              </div>
           </div>
-          <button onClick={() => router.push('/dashboard')} className="text-sm font-medium text-slate-400 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-full border border-white/5 hover:border-white/20 hidden sm:block">
+          <button onClick={() => window.location.href = '/dashboard'} className="text-sm font-medium text-slate-400 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-full border border-white/5 hover:border-white/20 hidden sm:block">
             ← Dashboard
           </button>
         </div>
@@ -466,7 +466,7 @@ export default function Lessons() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-emerald-500/20 transition-all duration-700"></div>
           
           <div className="flex items-center gap-3 mb-4 relative z-10">
-            <span className={\`text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full \${colors.badge}\`}>
+            <span className={`text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full ${colors.badge}`}>
               {userLevel} • {data.label} Level
             </span>
           </div>
@@ -488,14 +488,14 @@ export default function Lessons() {
             const isOpen = openLesson === lesson.id;
             return (
             <div key={lesson.id}
-              className={\`glass-card border rounded-[1.5rem] overflow-hidden transition-all duration-300 \${isOpen ? 'border-emerald-500/30 bg-slate-800/80 shadow-[0_0_30px_rgba(16,185,129,0.05)] scale-[1.01]' : 'border-slate-800 hover:border-slate-700'}\`}>
+              className={`glass-card border rounded-[1.5rem] overflow-hidden transition-all duration-300 ${isOpen ? 'border-emerald-500/30 bg-slate-800/80 shadow-[0_0_30px_rgba(16,185,129,0.05)] scale-[1.01]' : 'border-slate-800 hover:border-slate-700'}`}>
 
               {/* Card Header */}
               <button
                 onClick={() => setOpenLesson(isOpen ? null : lesson.id)}
                 className="w-full flex items-center gap-5 p-6 text-left active:scale-[0.99] transition-transform">
                 
-                <div className={\`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-sm transition-colors duration-300 \${isOpen ? 'bg-emerald-500/20 border border-emerald-500/30' : 'bg-slate-800 border border-slate-700'}\`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-sm transition-colors duration-300 ${isOpen ? 'bg-emerald-500/20 border border-emerald-500/30' : 'bg-slate-800 border border-slate-700'}`}>
                   {lesson.emoji}
                 </div>
                 
@@ -504,16 +504,16 @@ export default function Lessons() {
                     <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Mod {index + 1}</span>
                     <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{lesson.topic}</p>
                   </div>
-                  <h3 className={\`font-bold text-lg transition-colors \${isOpen ? 'text-white' : 'text-slate-200'}\`}>{lesson.title}</h3>
+                  <h3 className={`font-bold text-lg transition-colors ${isOpen ? 'text-white' : 'text-slate-200'}`}>{lesson.title}</h3>
                 </div>
                 
-                <div className={\`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-300 \${isOpen ? 'border-emerald-500 text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.2)] bg-emerald-500/10' : 'border-white/10 text-slate-500 bg-white/5'}\`}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={\`transition-transform duration-300 \${isOpen ? 'rotate-180' : ''}\`}><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-300 ${isOpen ? 'border-emerald-500 text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.2)] bg-emerald-500/10' : 'border-white/10 text-slate-500 bg-white/5'}`}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </div>
               </button>
 
               {/* Expandable Content */}
-              <div className={\`transition-all duration-500 ease-in-out overflow-hidden \${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}\`}>
+              <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                 <div className="px-6 pb-6 pt-2 space-y-6">
                   <p className="text-slate-300 text-[15px] leading-relaxed pl-[76px] pb-2 border-b border-white/5">{lesson.content}</p>
 
@@ -532,7 +532,7 @@ export default function Lessons() {
                   </div>
 
                   <div className="pl-[76px]">
-                    <div className={\`\${colors.bg} \${colors.border} border rounded-[1.5rem] p-5 relative overflow-hidden\`}>
+                    <div className={`${colors.bg} ${colors.border} border rounded-[1.5rem] p-5 relative overflow-hidden`}>
                       <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-[40px] -mr-10 -mt-10"></div>
                       <div className="flex justify-between items-start relative z-10 gap-4 flex-col sm:flex-row">
                         <div>
@@ -557,7 +557,7 @@ export default function Lessons() {
 
         {/* CTA */}
         <div className="mt-10 mb-10 flex gap-4">
-          <button onClick={() => router.push('/dashboard')}
+          <button onClick={() => window.location.href = '/dashboard'}
             className="flex-1 glass-card hover:bg-slate-800/80 border border-slate-700/50 rounded-2xl py-4 text-sm font-bold text-slate-300 transition-colors uppercase tracking-widest">
             Dashboard
           </button>

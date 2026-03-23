@@ -86,7 +86,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className={\`w-full premium-btn rounded-xl py-4 font-bold tracking-wide mt-4 shadow-lg shadow-blue-500/20 \${loading ? 'opacity-70 cursor-wait' : ''}\`}
+            className={`w-full premium-btn rounded-xl py-4 font-bold tracking-wide mt-4 shadow-lg shadow-blue-500/20 ${loading ? 'opacity-70 cursor-wait' : ''}`}
           >
             {loading ? 'Authenticating...' : 'Sign In'}
           </button>
