@@ -1,8 +1,13 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { useRouter } from 'next/navigation'
+import DashboardLayout from '../components/DashboardLayout'
+import { motion } from 'framer-motion'
+import {
+  Flame, Zap, Target, TrendingUp, ArrowRight, BookOpen,
+  Mic, FlaskConical, PenTool, CheckCircle, Lock
+} from 'lucide-react'
+import { dummyUser, weeklyXP, recentActivity } from '../lib/dummyData'
 
 const levelColors = {
   A1: 'text-white border-white/20 bg-white/5',
@@ -13,10 +18,31 @@ const levelColors = {
   C2: 'text-rose-400 border-rose-500/30 bg-rose-500/5',
 }
 
+const stagger = {
+  visible: { transition: { staggerChildren: 0.07 } }
+}
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+}
+
+function StatCard({ icon, label, value, sub, color }) {
+  return (
+    <motion.div variants={fadeUp} className="glass-card rounded-2xl p-6 border border-white/[0.06]">
+      <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${color}`}>
+        {icon}
+      </div>
+      <p className="text-3xl font-extrabold text-white mb-1">{value}</p>
+      <p className="text-sm font-semibold text-slate-400">{label}</p>
+      {sub && <p className="text-xs text-slate-600 mt-1">{sub}</p>}
+    </motion.div>
+  )
+}
+
 export default function Dashboard() {
   const [user, setUser] = useState(null)
   const [userLevel, setUserLevel] = useState(null)
-  const router = useRouter()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadData = async () => {
@@ -24,160 +50,231 @@ export default function Dashboard() {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) {
           window.location.href = '/login'
-        } else {
-          setUser(user)
-          const { data } = await supabase.from('profiles').select('level').eq('id', user.id).single()
-          setUserLevel(data?.level || null)
+          return
         }
+        setUser(user)
+        const { data } = await supabase.from('profiles').select('level').eq('id', user.id).single()
+        setUserLevel(data?.level || null)
       } catch (err) {
         console.log(err)
+      } finally {
+        setLoading(false)
       }
     }
     loadData()
   }, [])
 
-  if (!user) {
+  if (loading || !user) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 rounded-full border-t-2 border-r-2 border-amber-500 animate-spin"></div>
-      </main>
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="w-8 h-8 rounded-full border-t-2 border-indigo-500 animate-spin" />
+        </div>
+      </DashboardLayout>
     )
   }
 
   const hasLevel = !!userLevel
   const levelStyle = userLevel ? levelColors[userLevel] : 'text-slate-400 bg-white/5 border-white/10'
+  const dailyPct = Math.round((dummyUser.dailyProgress / dummyUser.dailyGoal) * 100)
+  const maxXP = Math.max(...weeklyXP.map(d => d.xp))
+  const name = user.user_metadata?.full_name?.split(' ')[0] || 'Student'
+
+  const actionCards = [
+    {
+      icon: <FlaskConical size={26} className="text-white" />,
+      bg: 'bg-white/5 border-white/10',
+      title: 'Level Test',
+      desc: hasLevel ? 'Want to level up? Retake your assessment.' : 'Discover your exact CEFR level with our AI test.',
+      cta: hasLevel ? 'Retake Test' : 'Start Assessment',
+      href: '/test',
+      locked: false,
+      ctaClass: 'premium-btn',
+    },
+    {
+      icon: <BookOpen size={26} className="text-emerald-400" />,
+      bg: 'bg-emerald-500/10 border-emerald-500/20',
+      title: 'Curated Lessons',
+      desc: hasLevel ? `Personalized ${userLevel} curriculum — 24 lessons completed.` : 'Unlock personalized lessons after your test.',
+      cta: 'View Curriculum',
+      href: hasLevel ? '/lessons' : '#',
+      locked: !hasLevel,
+      ctaClass: 'premium-btn-gold',
+    },
+    {
+      icon: <Mic size={26} className="text-amber-400" />,
+      bg: 'bg-amber-500/10 border-amber-500/20',
+      title: 'AI Speaking Practice',
+      desc: 'Real-time conversations with instant grammar & fluency feedback.',
+      cta: 'Start Session',
+      href: hasLevel ? '/practice' : '#',
+      locked: !hasLevel,
+      ctaClass: 'premium-btn-gold',
+    },
+  ]
 
   return (
-    <main className="min-h-screen text-slate-200 px-6 py-12 relative z-10">
-      <div className="max-w-5xl mx-auto">
+    <DashboardLayout>
+      <div className="px-8 py-10 max-w-6xl mx-auto">
 
-        {/* Top Header */}
-        <div className="flex justify-between items-center mb-10 glass-panel rounded-full px-8 py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
-              <span className="text-black font-extrabold text-xl">S</span>
+        {/* Welcome header */}
+        <motion.div
+          initial="hidden" animate="visible" variants={stagger}
+          className="mb-10"
+        >
+          <motion.h1 variants={fadeUp} className="text-3xl md:text-4xl font-extrabold text-white mb-2 tracking-tight">
+            Welcome back, <span className="text-amber-500">{name}</span> 👋
+          </motion.h1>
+          <motion.p variants={fadeUp} className="text-slate-400 font-medium">
+            Your AI English tutor is ready. {hasLevel ? "Let's keep your streak going!" : "Start with your level assessment."}
+          </motion.p>
+        </motion.div>
+
+        {/* Stats row */}
+        <motion.div
+          initial="hidden" animate="visible" variants={stagger}
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+        >
+          <StatCard icon={<span className="text-xl">🎓</span>} label="Current Level" value={userLevel || '—'} sub="CEFR Standard" color="bg-white/5 border border-white/10" />
+          <StatCard icon={<Flame size={20} className="text-rose-400" />} label="Day Streak" value={`${dummyUser.streak}🔥`} sub="Keep it up!" color="bg-rose-500/10 border border-rose-500/20" />
+          <StatCard icon={<Target size={20} className="text-emerald-400" />} label="Accuracy" value={`${dummyUser.accuracy}%`} sub="Grammar + Fluency" color="bg-emerald-500/10 border border-emerald-500/20" />
+          <StatCard icon={<Zap size={20} className="text-indigo-400" />} label="Total XP" value={dummyUser.totalXP.toLocaleString()} sub="All time" color="bg-indigo-500/10 border border-indigo-500/20" />
+        </motion.div>
+
+        {/* Daily Goal */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+          className="glass-card rounded-2xl p-6 border border-white/[0.06] mb-8"
+        >
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-2">
+              <Target size={16} className="text-amber-400" />
+              <span className="text-sm font-semibold text-white">Daily Practice Goal</span>
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">
-              SpeakEng
-            </h1>
+            <span className="text-sm text-slate-400">{dummyUser.dailyProgress} / {dummyUser.dailyGoal} min</span>
           </div>
-          <button
-            onClick={async () => {
-              await supabase.auth.signOut()
-              window.location.href = '/'
-            }}
-            className="text-sm font-semibold text-slate-400 hover:text-white transition-colors"
+          <div className="progress-bar-track">
+            <motion.div
+              className="progress-bar-fill"
+              initial={{ width: 0 }}
+              animate={{ width: `${dailyPct}%` }}
+              transition={{ duration: 1.2, ease: 'easeOut', delay: 0.4 }}
+            />
+          </div>
+          <p className="text-xs text-slate-500 mt-2">{dailyPct >= 100 ? '🎉 Goal complete! Amazing work.' : `${dummyUser.dailyGoal - dummyUser.dailyProgress} minutes left to hit your daily goal`}</p>
+        </motion.div>
+
+        {/* Action cards */}
+        <motion.div
+          initial="hidden" animate="visible" variants={stagger}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+        >
+          {actionCards.map((card, i) => (
+            <motion.div key={i} variants={fadeUp} className="glass-card rounded-3xl p-7 border border-white/[0.06] flex flex-col relative overflow-hidden group">
+              {card.locked && (
+                <div className="absolute inset-0 bg-[#050505]/80 backdrop-blur-[3px] z-10 flex items-center justify-center rounded-3xl">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-[#0a0a0a] border border-white/10 rounded-full text-slate-400 text-sm font-medium">
+                    <Lock size={14} /> Pass test to unlock
+                  </div>
+                </div>
+              )}
+              <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center mb-5 transition-transform group-hover:scale-110 ${card.bg}`}>
+                {card.icon}
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2 tracking-tight">{card.title}</h3>
+              <p className="text-slate-400 text-sm mb-6 flex-grow leading-relaxed">{card.desc}</p>
+              <a
+                href={card.locked ? '#' : card.href}
+                className={`w-full text-center rounded-xl py-3 text-sm font-bold tracking-wide transition-all ${card.ctaClass}`}
+              >
+                {card.cta}
+              </a>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Bottom row: Weekly chart + Recent activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
+
+          {/* Weekly XP chart */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+            className="lg:col-span-2 glass-card rounded-3xl p-7 border border-white/[0.06]"
           >
-            Sign Out
-          </button>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-sm font-bold text-white">Weekly XP</h3>
+              <span className="text-xs text-slate-500 px-2 py-1 rounded-full bg-white/5">+{dummyUser.weeklyXP} this week</span>
+            </div>
+            <div className="flex items-end gap-2 h-28">
+              {weeklyXP.map((d, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                  <motion.div
+                    className="w-full rounded-md bg-amber-500/40 relative overflow-hidden"
+                    initial={{ scaleY: 0 }}
+                    animate={{ scaleY: 1 }}
+                    transition={{ delay: 0.5 + i * 0.07, duration: 0.5, ease: 'easeOut' }}
+                    style={{ height: `${(d.xp / maxXP) * 100}%`, originY: 1, background: 'linear-gradient(to top, #d97706, #fbbf24)' }}
+                  />
+                  <span className="text-[10px] text-slate-600 font-medium">{d.day}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Recent activity */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}
+            className="lg:col-span-3 glass-card rounded-3xl p-7 border border-white/[0.06]"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-sm font-bold text-white">Recent Activity</h3>
+              <a href="/progress" className="text-xs text-amber-500 hover:text-amber-400 font-semibold flex items-center gap-1">
+                View all <ArrowRight size={12} />
+              </a>
+            </div>
+            <div className="space-y-3">
+              {recentActivity.slice(0, 4).map((item) => (
+                <div key={item.id} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.03] transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/[0.06] flex items-center justify-center text-lg shrink-0">
+                    {item.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-white truncate">{item.label}</p>
+                    <p className="text-xs text-slate-500 truncate">{item.detail}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-xs font-bold text-amber-500">+{item.xp} XP</p>
+                    <p className="text-xs text-slate-600">{item.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
 
-        {/* Welcome Section */}
-        <div className="glass-card rounded-3xl p-8 mb-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-[80px] -mr-20 -mt-20"></div>
-          <h2 className="text-3xl font-bold text-white mb-2 relative z-10 tracking-tight">
-            Welcome back, <span className="text-amber-500">{user.user_metadata?.full_name || 'Student'}</span> 👋
-          </h2>
-          <p className="text-slate-400 font-medium relative z-10">Your personal AI English tutor is ready. Let's make progress today.</p>
-        </div>
-
-        {/* Level Banner */}
-        <div className={`border rounded-2xl p-6 mb-8 flex justify-between items-center transition-all ${levelStyle}`}>
-          <div className="flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-white/5 border border-white/10`}>
-              <span className="text-2xl">🎓</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-white">Current Proficiency Level</h3>
-              <p className="text-sm opacity-80 mt-0.5">
-                {hasLevel ? 'Determined by your AI assessment' : 'You need to take the level test first'}
-              </p>
-            </div>
-          </div>
-          <span className={`px-5 py-2.5 rounded-full text-sm font-bold border flex items-center gap-2 ${levelStyle}`}>
-            <span className="w-2 h-2 rounded-full bg-current opacity-70"></span>
-            {userLevel || 'Not Tested'}
-          </span>
-        </div>
-
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-
-          {/* Level Test */}
-          <div className="glass-card rounded-3xl p-6 flex flex-col h-full group">
-            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl mb-5 group-hover:bg-white/10 transition-colors">
-              📊
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2 tracking-tight">Level Test</h3>
-            <p className="text-slate-400 text-sm mb-6 flex-grow">
-              {hasLevel ? 'Want to see if you improved? Retake the test.' : 'Evaluate your grammar and vocabulary instantly.'}
-            </p>
-            <a href="/test"
-              className="w-full text-center premium-btn rounded-xl py-3 text-sm font-semibold tracking-wide">
-              {hasLevel ? 'Retake Test' : 'Start Assessment'}
-            </a>
-          </div>
-
-          {/* Lessons */}
-          <div className="glass-card rounded-3xl p-6 flex flex-col h-full group relative overflow-hidden">
-            {!hasLevel && <div className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-[2px] z-10 flex items-center justify-center"><p className="text-slate-400 font-medium px-4 py-2 bg-[#050505] rounded-full text-sm border border-white/10">🔒 Pass test to unlock</p></div>}
-            
-            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl mb-5 group-hover:bg-white/10 transition-colors relative z-0">
-              📚
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2 relative z-0 tracking-tight">Curated Lessons</h3>
-            <p className="text-slate-400 text-sm mb-6 flex-grow relative z-0">
-              {hasLevel ? `Specialized curriculum for ${userLevel} level.` : 'Personalized lessons based on your level.'}
-            </p>
-            
-            <a href={hasLevel ? "/lessons" : "#"}
-              className={`w-full text-center premium-btn-gold rounded-xl py-3 text-sm font-bold tracking-wide transition-all ${hasLevel ? '' : 'opacity-50'}`}>
-              View Curriculum
-            </a>
-          </div>
-
-          {/* Mock Interview */}
-          <div className="glass-card rounded-3xl p-6 flex flex-col h-full group relative overflow-hidden">
-            {!hasLevel && <div className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-[2px] z-10 flex items-center justify-center"><p className="text-slate-400 font-medium px-4 py-2 bg-[#050505] rounded-full text-sm border border-white/10">🔒 Pass test to unlock</p></div>}
-
-            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl mb-5 group-hover:bg-white/10 transition-colors relative z-0">
-              🎤
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2 relative z-0 tracking-tight">AI Interview</h3>
-            <p className="text-slate-400 text-sm mb-6 flex-grow relative z-0">
-              Real-time conversational practice with instant feedback.
-            </p>
-            
-            <a href={hasLevel ? "/interview" : "#"}
-              className={`w-full text-center premium-btn-gold rounded-xl py-3 text-sm font-bold tracking-wide transition-all ${hasLevel ? '' : 'opacity-50'}`}>
-              Start Session
-            </a>
-          </div>
-
-        </div>
-
-        {/* Writing Practice (Full Width) */}
-        <div className="glass-card rounded-3xl p-8 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-full bg-emerald-500/5 rounded-full blur-[80px] -mr-20"></div>
-          
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-6">
-            <div className="flex items-start md:items-center gap-5">
-              <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-4xl shadow-[0_0_20px_rgba(16,185,129,0.1)] group-hover:scale-105 transition-transform flex-shrink-0">
+        {/* Writing Studio CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+          className="glass-card rounded-3xl p-8 border border-white/[0.06] relative overflow-hidden group"
+        >
+          <div className="absolute top-0 right-0 w-72 h-full bg-emerald-500/5 rounded-full blur-[80px] -mr-20 pointer-events-none" />
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+            <div className="flex items-center gap-5">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-4xl shadow-[0_0_20px_rgba(16,185,129,0.1)] group-hover:scale-105 transition-transform shrink-0">
                 ✍️
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-white mb-1 tracking-tight">Writing Studio</h3>
-                <p className="text-slate-400">Get sentence-by-sentence corrections and AI grading on your essays.</p>
+                <p className="text-slate-400">Sentence-by-sentence AI corrections and essay grading.</p>
               </div>
             </div>
-            <a href="/writing"
-              className="premium-btn rounded-xl px-8 py-3.5 text-sm font-bold tracking-wide whitespace-nowrap">
+            <a href="/writing" className="premium-btn rounded-xl px-8 py-3.5 text-sm font-bold whitespace-nowrap">
               Open Studio →
             </a>
           </div>
-        </div>
+        </motion.div>
 
       </div>
-    </main>
+    </DashboardLayout>
   )
 }
